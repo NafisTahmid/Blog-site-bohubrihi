@@ -96,4 +96,6 @@ def change_dp(request):
             return HttpResponseRedirect(reverse('App_Login:profile'))
     return render(request, 'App_Login/add_dp.html', context = {'form':form})
 
+
+
     
