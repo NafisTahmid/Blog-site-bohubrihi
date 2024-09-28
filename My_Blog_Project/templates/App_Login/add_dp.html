@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title_block %} Add Profile Picture {% endblock  %}
+{% block body_block %}
+{% load crispy_forms_tags %}
+<h2>Add Profile Picture</h2>
+{% if user.user_profile %}
+<img src="/media/{{user.user_profile.profile_pic}}" class="img-fluid rounded-circle" width="100" alt="">
+{% else %}
+<img src="/media/profile_pics/profile_avatar.jpg"  class="img-fluid rounded-circle" width="100" alt="">
+{% endif %}
+<form method="POST" enctype="multipart/form-data">
+    {{ form|crispy }}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-info btn-sm" >Add Picture</button>
+</form>
+{% endblock  %}

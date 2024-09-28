@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title_block %} Home {% endblock  %}
+{% block body_block %}
+<h2>List of blogs: </h2>
+{% for blog in blogs %}
+<h3>{{ blog.blog_title }}</h3>
+<hr>
+<h6>{{ blog.blog_content }}</h6>
+{% endfor %}
+{% endblock  %}
