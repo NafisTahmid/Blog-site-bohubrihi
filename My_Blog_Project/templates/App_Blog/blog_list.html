@@ -3,61 +3,71 @@
 {% load custom_filters %}
 {% block body_block %}
 
-{% for blog in blogs %}
-<div class="row">
-    <div class="col-sm-4">
+<div class="container">
+  <div class="justify-content-center align-items-center">
+    {% if user.is_authenticated %}
+    <div class="row row-cols-1 row-cols-md-3 g-4 my-3">
+      {% for blog in blogs %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="/media/{{ blog.blog_image }}" class="card-img-top img-fluid mx-auto d-block" alt="{{ blog.blot_title}}">
+          <div class="card-body">
+            <h5 class="card-title">{{ blog.blog_title }}</h5>
+            <p class="card-text"> {{ blog.blog_content|range_filter|truncatewords:30 }} </p>
+            <a href="{% url 'App_Blog:blog_details' slug=blog.slug %}" class="btn btn-primary btn-sm">Read more</a>
+          </div>
+          <div class="card-footer">
+            <small class="text-body-secondary">Last updated: {{ blog.update_date }}</small>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <nav aria-label="Page navigation example ">
+      <ul class="pagination justify-content-center">
+      
+      <!-- Previous Page -->
+      {% if blogs.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ blogs.previous_page_number }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link">Previous</a>
+        </li>
+      {% endif %}
+  
+      <!-- Page Numbers -->
+      {% for blog_page in blogs.paginator.page_range %}
+          {% if blogs.number == blog_page %}
+              <!-- Current page, make it active and disable the link -->
+              <li class="page-item active"><a class="page-link" href="?page={{ blog_page }}">{{ blog_page }}</a></li>
+          {% else %}
+              <!-- Other pages -->
+              <li class="page-item"><a class="page-link" href="?page={{ blog_page }}">{{ blog_page }}</a></li>
+          {% endif %}
+      {% endfor %}
+  
+      <!-- Next Page -->
+      {% if blogs.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ blogs.next_page_number }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link">Next</a>
+        </li>
+      {% endif %}
+      
+      </ul>
+  </nav>
+    {% endif %}
    
-        <img src="/media/{{blog.blog_image}}" class="img-fluid mx-auto d-block mt-3" width="100" alt="{{blog.blog_title}}">
-    </div>
-    <div class="col-sm-8">
-        <h4>{{ blog.blog_title }}</h4>
-        <p>{{blog.blog_content|range_filter|linebreaks}} <a href="{% url 'App_Blog:blog_details' slug=blog.slug %}">Read more</a></p>
-        <h6>Posted by: @{{blog.author}} </h6>
-        <small>{{ blog.publish_date }}</small>
-        <small>{{blog.liked_blog.count}} likes | {{blog.blog_comment.count }} comments</small>
-    </div>
-    <hr>
+  </div>
 </div>
-{% endfor %}
 
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-    
-    <!-- Previous Page -->
-    {% if blogs.has_previous %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ blogs.previous_page_number }}">Previous</a>
-      </li>
-    {% else %}
-      <li class="page-item disabled">
-        <a class="page-link">Previous</a>
-      </li>
-    {% endif %}
 
-    <!-- Page Numbers -->
-    {% for blog_page in blogs.paginator.page_range %}
-        {% if blogs.number == blog_page %}
-            <!-- Current page, make it active and disable the link -->
-            <li class="page-item active"><a class="page-link" href="?page={{ blog_page }}">{{ blog_page }}</a></li>
-        {% else %}
-            <!-- Other pages -->
-            <li class="page-item"><a class="page-link" href="?page={{ blog_page }}">{{ blog_page }}</a></li>
-        {% endif %}
-    {% endfor %}
 
-    <!-- Next Page -->
-    {% if blogs.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ blogs.next_page_number }}">Next</a>
-      </li>
-    {% else %}
-      <li class="page-item disabled">
-        <a class="page-link">Next</a>
-      </li>
-    {% endif %}
-    
-    </ul>
-</nav>
 
 
 

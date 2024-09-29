@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 
 # Create your views here.
 def blog_list(request):
-    queryset = Blog.objects.all()
+    queryset = Blog.objects.all().order_by('-publish_date')
     per_page = 3
     paginator = Paginator(queryset, per_page)
     page_number = request.GET.get("page")

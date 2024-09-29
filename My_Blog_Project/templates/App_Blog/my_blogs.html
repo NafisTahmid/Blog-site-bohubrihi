@@ -16,7 +16,7 @@
     <div class="col-sm-8">
         <p>{{ blog.blog_content|range_filter|linebreaks }}</p>
         <a href="{% url 'App_Blog:blog_details' slug=blog.slug %}">Read more</a>
-        <div class="d-flex">
+        <div class="d-flex mb-3">
             <a href="{% url 'App_Blog:edit_blog' pk=blog.pk %}" class="btn btn-warning btn-sm ">Edit</a>
             <a href="{% url 'App_Blog:delete_blog' pk=blog.pk %}" class="btn btn-danger btn-sm  ms-2">Delete</a>
         </div>
