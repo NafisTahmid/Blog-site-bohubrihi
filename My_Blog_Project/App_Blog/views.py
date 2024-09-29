@@ -5,19 +5,24 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
-from App_Blog.forms import CommentForm
+from App_Blog.forms import CommentForm, PostForm
 from django.core.paginator import Paginator
 
 # Create your views here.
 def blog_list(request):
-    context = {}
+    queryset = Blog.objects.all()
+    per_page = 3
+    paginator = Paginator(queryset, per_page)
+    page_number = request.GET.get("page")
+    blogs = paginator.get_page(page_number)
+    context = {'blogs':blogs}
     return render(request, 'App_Blog/blog_list.html', context=context)
 
 
 class CreateBlog(LoginRequiredMixin, CreateView):
     model = Blog
     template_name = 'App_Blog/create_blog.html'
-    fields=('blog_title', 'blog_content', 'blog_image')
+    fields=('blog_title', 'blog_content', 'blog_image', 'category')
 
     def form_valid(self, form):
         blog_obj = form.save(commit=False)
@@ -26,17 +31,30 @@ class CreateBlog(LoginRequiredMixin, CreateView):
         blog_obj.slug = title.replace(' ', '-')+'-'+str(uuid.uuid4())
         blog_obj.save()
         return HttpResponseRedirect(reverse('index'))
-    
-class BlogList(ListView):
-    model = Blog
-    template_name = 'App_Blog/blog_list.html'
-    context_object_name = "blogs"
-    paginate_by = 2
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # You can access the paginator, page object, and is_paginated boolean here if needed
-        return context
+    
+# class BlogList(ListView):
+#     model = Blog
+#     template_name = 'App_Blog/blog_list.html'
+
+# class CategoryList(ListView):
+#     model  = Blog.objects.values('category').distinct()
+#     template_name = 'App_Blog/category_list.html'
+#     context_object_name = 'blogs'
+
+
+class CategoryList(ListView):
+    model = Blog 
+    template_name = 'App_Blog/category_list.html'
+    context_object_name = 'blogs'
+
+
+
+def ViewByCategory(request, category):
+    blogs = Blog.objects.filter(category=category)
+    diction = {'blogs':blogs}
+    return render(request, 'App_Blog/category_posts.html', context=diction)
+
 
 
 @login_required
@@ -86,7 +104,7 @@ class MyBlogs(LoginRequiredMixin, TemplateView):
 
 class UpdateBlog(LoginRequiredMixin, UpdateView):
     model = Blog
-    fields=('blog_title', 'blog_content', 'blog_image')
+    fields=('blog_title', 'blog_content', 'blog_image', 'category')
     template_name = 'App_Blog/edit_blog.html'
 
     def get_success_url(self, **kwargs):

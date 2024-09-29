@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title-block %}Blog Categories{% endblock  %}
+
+{% block body_block %}
+<ul>
+    {% for blog in blogs %}
+        <li><a href="{% url 'App_Blog:category_posts' category=blog.category %}">{{ blog.category }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock  %}

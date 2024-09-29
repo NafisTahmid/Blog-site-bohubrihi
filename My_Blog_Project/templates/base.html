@@ -17,6 +17,9 @@
             <li class="nav-item active">
                 <a href="{% url 'index' %}" class="nav-link"><img src="/media/blog.png" class="img-fluid d-block" width="50" alt=""></a>
             </li>
+            <li class="nav-item">
+                <a href="{% url 'App_Blog:categories' %}" class="nav-link mt-3">Categories</a>
+            </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle mt-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
